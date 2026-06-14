@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { KpiDashboard } from './pages/KpiDashboard';
 import { SectionPage } from './pages/SectionPage';
+import { UsersPage } from './pages/UsersPage';
 
 type SectionRoute = {
   path: string;
@@ -10,11 +11,6 @@ type SectionRoute = {
 };
 
 const sectionRoutes: SectionRoute[] = [
-  {
-    path: 'users',
-    title: 'Пользователи',
-    description: 'Единая база пользователей, ролей и статусов.',
-  },
   {
     path: 'payments',
     title: 'Платежи',
@@ -47,13 +43,16 @@ export default function App() {
       <Route path="/admin" element={<Layout />}>
         <Route index element={<Navigate to="/admin/kpi" replace />} />
         <Route path="kpi" element={<KpiDashboard />} />
-        {sectionRoutes.map(({ path, title, description }) => (
-          <Route
-            key={path}
-            path={path}
-            element={<SectionPage title={title} description={description} />}
-          />
-        ))}
+        <Route path="users" element={<UsersPage />} />
+        {sectionRoutes
+          .filter(({ path }) => path !== 'users')
+          .map(({ path, title, description }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<SectionPage title={title} description={description} />}
+            />
+          ))}
       </Route>
       <Route path="*" element={<Navigate to="/admin/kpi" replace />} />
     </Routes>
