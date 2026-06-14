@@ -34,9 +34,9 @@ export const navigationGroups: NavigationGroup[] = [
   {
     title: 'УПРАВЛЕНИЕ',
     items: [
-      { label: 'Пользователи', path: '/management/users', icon: <Users /> },
-      { label: 'Платежи', path: '/management/payments', icon: <CreditCard /> },
-      { label: 'Редакторы', path: '/management/editors', icon: <UserCog /> },
+      { label: 'Пользователи', path: '/admin/users', icon: <Users /> },
+      { label: 'Платежи', path: '/admin/payments', icon: <CreditCard /> },
+      { label: 'Редакторы', path: '/admin/editors', icon: <UserCog /> },
     ],
   },
   {
@@ -46,18 +46,18 @@ export const navigationGroups: NavigationGroup[] = [
         label: 'CRM',
         icon: <Workflow />,
         children: [
-          { label: 'Дашборд', path: '/communication/crm/dashboard', icon: <BarChart3 /> },
-          { label: 'Пользователи', path: '/management/users?view=crm', icon: <Users /> },
-          { label: 'Сегменты', path: '/communication/crm/segments', icon: <Spline /> },
-          { label: 'Кампании', path: '/communication/crm/campaigns', icon: <Megaphone /> },
+          { label: 'Дашборд', path: '/admin/crm/dashboard', icon: <BarChart3 /> },
+          { label: 'Пользователи', path: '/admin/users?view=crm', icon: <Users /> },
+          { label: 'Сегменты', path: '/admin/crm/segments', icon: <Spline /> },
+          { label: 'Кампании', path: '/admin/crm/campaigns', icon: <Megaphone /> },
         ],
       },
       {
         label: 'Поддержка',
         icon: <Headphones />,
         children: [
-          { label: 'Тикеты', path: '/communication/support/tickets', icon: <BadgePercent /> },
-          { label: 'FAQ', path: '/communication/support/faq', icon: <HelpCircle /> },
+          { label: 'Тикеты', path: '/admin/support/tickets', icon: <BadgePercent /> },
+          { label: 'FAQ', path: '/admin/support/faq', icon: <HelpCircle /> },
         ],
       },
     ],
@@ -65,20 +65,20 @@ export const navigationGroups: NavigationGroup[] = [
   {
     title: 'АНАЛИТИКА',
     items: [
-      { label: 'KPI Dashboard', path: '/analytics/kpi', icon: <BarChart3 /> },
-      { label: 'Risk Engine', path: '/analytics/risk', icon: <ShieldAlert /> },
-      { label: 'Воронка и когорты', path: '/analytics/funnel', icon: <PieChart /> },
+      { label: 'KPI Dashboard', path: '/admin/kpi', icon: <BarChart3 /> },
+      { label: 'Risk Engine', path: '/admin/risk', icon: <ShieldAlert /> },
+      { label: 'Воронка и когорты', path: '/admin/funnel', icon: <PieChart /> },
     ],
   },
   {
     title: 'ПАРТНЁРСТВО',
-    items: [{ label: 'Рефералы', path: '/partnership/referrals', icon: <Network /> }],
+    items: [{ label: 'Рефералы', path: '/admin/referrals', icon: <Network /> }],
   },
   {
     title: 'КОНТЕНТ',
     items: [
-      { label: 'Турниры', path: '/content/tournaments', icon: <Trophy /> },
-      { label: 'Промо', path: '/content/promo', icon: <Megaphone /> },
+      { label: 'Турниры', path: '/admin/tournaments', icon: <Trophy /> },
+      { label: 'Промо', path: '/admin/promo', icon: <Megaphone /> },
     ],
   },
 ];

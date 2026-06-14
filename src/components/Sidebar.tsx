@@ -13,7 +13,8 @@ function isItemActive(item: NavigationItem, pathname: string, search: string) {
   if (pathname !== path) return false;
   if (query) return search === `?${query}`;
 
-  return pathname !== '/management/users' || search !== '?view=crm';
+  // For /admin/users without query, only match when there is no ?view=crm
+  return pathname !== '/admin/users' || search !== '?view=crm';
 }
 
 function hasActiveChild(item: NavigationItem, pathname: string, search: string) {
@@ -57,7 +58,7 @@ function SidebarItem({ item, nested = false }: { item: NavigationItem; nested?: 
     <NavLink
       className={`nav-row ${nested ? 'is-nested' : ''} ${active ? 'is-active' : ''}`}
       to={item.path ?? '/'}
-      end={normalize(item.path) === '/analytics/kpi'}
+      end={normalize(item.path) === '/admin/kpi'}
     >
       {icon}
       <span>{item.label}</span>
