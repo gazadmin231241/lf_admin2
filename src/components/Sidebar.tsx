@@ -2,8 +2,15 @@ import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { ExpandIcon, navigationGroups, type NavigationItem } from '../navigation';
 
+const crmUsersPath = '/admin/users';
+const crmUsersSearch = '?view=crm';
+
 function normalize(path = '') {
   return path.split('?')[0];
+}
+
+function isCrmUsersView(pathname: string, search: string) {
+  return pathname === crmUsersPath && search === crmUsersSearch;
 }
 
 function isItemActive(item: NavigationItem, pathname: string, search: string) {
@@ -13,8 +20,7 @@ function isItemActive(item: NavigationItem, pathname: string, search: string) {
   if (pathname !== path) return false;
   if (query) return search === `?${query}`;
 
-  // For /admin/users without query, only match when there is no ?view=crm
-  return pathname !== '/admin/users' || search !== '?view=crm';
+  return !isCrmUsersView(pathname, search);
 }
 
 function hasActiveChild(item: NavigationItem, pathname: string, search: string) {
@@ -25,7 +31,8 @@ function SidebarItem({ item, nested = false }: { item: NavigationItem; nested?: 
   const location = useLocation();
   const shouldStartOpen = hasActiveChild(item, location.pathname, location.search);
   const [open, setOpen] = useState(shouldStartOpen);
-  const hasChildren = Boolean(item.children?.length);
+  const children = item.children ?? [];
+  const hasChildren = children.length > 0;
   const active = isItemActive(item, location.pathname, location.search);
 
   const icon = <span className="nav-icon">{item.icon}</span>;
@@ -45,7 +52,7 @@ function SidebarItem({ item, nested = false }: { item: NavigationItem; nested?: 
         </button>
         {open && (
           <div className="subnav">
-            {item.children!.map((child) => (
+            {children.map((child) => (
               <SidebarItem key={child.label} item={child} nested />
             ))}
           </div>

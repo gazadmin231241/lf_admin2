@@ -12,17 +12,17 @@ function renderApp(initialPath = '/') {
   );
 }
 
-/**
- * Acceptance criteria from issue #2:
- * 1. Sidebar on left with 5 navigation groups, content on right
- * 2. Each group is a collapsible/expandable heading
- * 3. CRM and Support are groups with sub-items, expand by click
- * 4. KPI Dashboard is default route (/admin or /admin/kpi)
- * 5. CRM→Пользователи leads to /admin/users?view=crm
- * 6. All sections have routes, show placeholder "Раздел в разработке"
- * 7. All UI text in Russian
- * 8. Navigation works without page reload (SPA)
- */
+function getCrmUsersLink() {
+  const crmUsersLink = screen
+    .getAllByRole('link', { name: /пользователи/i })
+    .find((link) => link.getAttribute('href') === '/admin/users?view=crm');
+
+  if (!crmUsersLink) {
+    throw new Error('CRM users link was not rendered');
+  }
+
+  return crmUsersLink;
+}
 
 describe('AC-1: Sidebar with 5 navigation groups', () => {
   it('renders 5 navigation groups in the sidebar', () => {
@@ -71,14 +71,11 @@ describe('AC-3: CRM and Support expand by click', () => {
     const user = userEvent.setup();
     renderApp('/admin/kpi');
 
-    // CRM sub-items should NOT be visible initially
     expect(screen.queryByRole('link', { name: /^дашборд$/i })).not.toBeInTheDocument();
 
-    // Click CRM to expand
     const crmButton = screen.getByRole('button', { name: /crm/i });
     await user.click(crmButton);
 
-    // Now CRM sub-items should be visible
     expect(screen.getByRole('link', { name: /дашборд/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /сегменты/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /кампании/i })).toBeInTheDocument();
@@ -88,7 +85,6 @@ describe('AC-3: CRM and Support expand by click', () => {
     const user = userEvent.setup();
     renderApp('/admin/kpi');
 
-    // Support sub-items should NOT be visible initially
     expect(screen.queryByRole('link', { name: /тикеты/i })).not.toBeInTheDocument();
 
     const supportButton = screen.getByRole('button', { name: /поддержка/i });
@@ -105,13 +101,7 @@ describe('AC-3: CRM and Support expand by click', () => {
     const crmButton = screen.getByRole('button', { name: /crm/i });
     await user.click(crmButton);
 
-    // There are two "Пользователи" links — the CRM nested one should point to ?view=crm
-    const usersLinks = screen.getAllByRole('link', { name: /пользователи/i });
-    const crmUsersLink = usersLinks.find((link) =>
-      link.getAttribute('href')?.includes('?view=crm'),
-    );
-    expect(crmUsersLink).toBeTruthy();
-    expect(crmUsersLink!.getAttribute('href')).toBe('/admin/users?view=crm');
+    expect(getCrmUsersLink()).toHaveAttribute('href', '/admin/users?view=crm');
   });
 
   it('collapsible groups can be toggled closed', async () => {
@@ -119,11 +109,9 @@ describe('AC-3: CRM and Support expand by click', () => {
     renderApp('/admin/kpi');
 
     const crmButton = screen.getByRole('button', { name: /crm/i });
-    // Expand
     await user.click(crmButton);
     expect(screen.getByRole('link', { name: /дашборд/i })).toBeInTheDocument();
 
-    // Collapse
     await user.click(crmButton);
     expect(screen.queryByRole('link', { name: /дашборд/i })).not.toBeInTheDocument();
   });
@@ -149,12 +137,7 @@ describe('AC-5: CRM→Пользователи leads to /admin/users?view=crm', 
     const crmButton = screen.getByRole('button', { name: /crm/i });
     await user.click(crmButton);
 
-    const usersLinks = screen.getAllByRole('link', { name: /пользователи/i });
-    const crmUsersLink = usersLinks.find((link) =>
-      link.getAttribute('href')?.includes('?view=crm'),
-    );
-    expect(crmUsersLink).toBeTruthy();
-    expect(crmUsersLink!.getAttribute('href')).toBe('/admin/users?view=crm');
+    expect(getCrmUsersLink()).toHaveAttribute('href', '/admin/users?view=crm');
   });
 });
 
@@ -203,16 +186,12 @@ describe('AC-8: Navigation works without page reload (SPA)', () => {
     const user = userEvent.setup();
     renderApp('/admin/kpi');
 
-    // Initially on KPI Dashboard
     expect(screen.getByRole('heading', { level: 1, name: /kpi dashboard/i })).toBeInTheDocument();
 
-    // Click on Платежи
     const paymentsLink = screen.getByRole('link', { name: /платежи/i });
     await user.click(paymentsLink);
 
-    // Content should update to show Платежи page
     expect(screen.getByRole('heading', { level: 1, name: /платежи/i })).toBeInTheDocument();
-    // KPI Dashboard should no longer be shown
     expect(screen.queryByRole('heading', { level: 1, name: /kpi dashboard/i })).not.toBeInTheDocument();
   });
 });
